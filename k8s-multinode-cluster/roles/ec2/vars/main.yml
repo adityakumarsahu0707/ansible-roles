@@ -1,0 +1,19 @@
+---
+# vars file for ec2
+image: "ami-0a9d27a9f4f5c0efc"
+type: "t2.micro"
+sg: "sg-02a140eb95ffc2389"
+key: "adi_key_march"
+subnet: "subnet-611c1509"
+region: "ap-south-1"
+count: 2
+key_path: "/root/key/adi_key_march.pem"
+inventory_path: "/ansible-playbooks/k8s-multinode-cluster/inventory"
+
+pip-sdk:
+        - boto
+        - boto3
+        - botocore
+worker-node:
+        - Worker1
+        - Worker2

@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars:
+          - node:
+                  - Worker1
+                  - Worker2
+  tasks:
+          - debug:
+                  msg: "{{ item }}"
+            loop: "{{ node }}" 
