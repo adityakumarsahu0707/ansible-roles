@@ -1,0 +1,49 @@
+---
+# tasks file for ec2
+
+- name: K8s Master Node creation
+  ec2_instance:
+          name: "K8s-Master"
+          security_group: "{{ sg }}"
+          key_name: "{{ key }}"
+          instance_type: "{{ type }}"
+          image_id: "{{ image }}"
+          region: "{{ region }}"
+          wait: yes
+          wait_timeout: 10
+          vpc_subnet_id: "{{ subnet }}"
+  register: master
+- name: Updating local Inventory
+  lineinfile:
+          path: '{{ inventory_path }}'
+          regexp: '^masternode'
+          line: '{{ master.instances[0].public_ip_address }}  ansible_private_key_file={{ key_path }}  ansible_ssh_user=ec2-user'
+          insertafter: '[masternode]'
+
+- name: K8s Worker Node creation
+  ec2_instance:
+          name: "K8s-Worker1"
+          security_group: "{{ sg }}"
+          key_name: "{{ key }}"
+          instance_type: "{{ type }}"
+          image_id: "{{ image }}"
+          region: "{{ region }}"
+          wait: yes
+          wait_timeout: 10
+          vpc_subnet_id: "{{ subnet }}"  
+  register: slave
+
+- name: Updating local Inventory
+  lineinfile:
+          path: '{{ inventory_path }}'
+          regexp: '^slavenode'
+          line: '{{ slave.instances[0].public_ip_address }}  ansible_private_key_file={{ key_path }}  ansible_ssh_user=ec2-user'
+          insertafter: '[slavenode]'
+- name: Print Worker node
+  debug:
+          msg: "{{ slave }}"
+
+- name: Print Master Node
+  debug:
+          msg: "{{ master }}"
+

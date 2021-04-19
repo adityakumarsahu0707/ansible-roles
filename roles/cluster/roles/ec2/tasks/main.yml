@@ -1,0 +1,33 @@
+---
+# tasks file for ec2
+
+- name: K8s Master Node creation
+  ec2:
+          instance_tags:
+                  Name: K8s-Master  
+          group_id: "{{ sg }}"
+          key_name: "{{ key }}"
+          instance_type: "{{ type }}"
+          image: "{{ image }}"
+          region: "{{ region }}"
+          wait: yes
+          vpc_subnet_id: "{{ subnet }}"
+  register: master
+
+- name: K8s Worker Node creation
+  ec2:
+          instance_tags:
+                  Name: "{{ item }}"   
+          group_id: "{{ sg }}"
+          key_name: "{{ key }}"
+          instance_type: "{{ type }}"
+          image: "{{ image }}"
+          region: "{{ region }}"
+          wait: yes
+          vpc_subnet_id: "{{ subnet }}"
+  loop: "{{ worker-node }}"
+  register: worker
+- name: Print
+  debug:
+          msg: "{{ worker }}"
+

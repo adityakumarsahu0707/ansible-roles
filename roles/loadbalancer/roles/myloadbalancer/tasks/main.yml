@@ -1,0 +1,13 @@
+---
+# tasks file for myloadbalancer
+
+- name: Configuring Load Balancer
+  copy:
+          src: "/ansible-playbooks/conf/haproxy.cfg"
+          dest: "/etc/haproxy/haproxy.cfg"
+
+- name: Restarting Load Balancer
+  service:
+          name: haproxy
+          state: restarted
+

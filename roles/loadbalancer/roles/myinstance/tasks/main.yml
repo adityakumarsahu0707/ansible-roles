@@ -1,0 +1,32 @@
+---
+# tasks file for myinstance
+- name: Creating Instance
+  ec2_instance:
+          name: "{{ instance_name }}"
+          security_group: "{{ sg }}"
+          key_name: "{{ key }}"
+          instance_type: "{{ type }}"
+          image_id: "{{ image }}"
+          region: "{{ region }}"
+          wait: yes
+          wait_timeout: 10
+          vpc_subnet_id: "subnet-611c1509"
+  register: os
+
+- name: Updating local LB file
+  lineinfile:
+          path: '/ansible-playbooks/conf/haproxy.cfg'
+          regexp: '^server'
+          line: "     server  app{{ instance_name }} {{ os.instances[0].public_ip_address }}:80 check"
+          insertbefore: '#    server  app1 127.0.0.1:5001 check'
+
+- name: Updating local Inventory
+  lineinfile:
+          path: '/ansible-playbooks/inventory'
+          regexp: '^server'
+          line: '{{ os.instances[0].public_ip_address }}  ansible_private_key_file=/root/key/adi_key_march.pem  ansible_ssh_user=ec2-user'
+          insertbefore: '[server]' 
+
+- name: Waiting till instance get's ready
+  pause:
+          minutes: 2

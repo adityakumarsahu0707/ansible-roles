@@ -1,0 +1,17 @@
+---
+# tasks file for myapache
+
+- name: Installing Softwares
+  yum:
+          name: "{{ packages }}"
+          state: present
+
+- name: Cooking webpages
+  copy:
+          src: "/ansible-playbooks/conf/index.php"
+          dest: "/var/www/html/"
+
+- name: Starting Webserver
+  service:
+          name: httpd
+          state: restarted

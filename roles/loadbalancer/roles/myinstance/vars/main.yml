@@ -1,0 +1,7 @@
+---
+# vars file for myinstance
+key: "adi_key_march"
+type: t2.micro
+image: ami-068d43a544160b7ef
+region: ap-south-1
+sg: sg-02a140eb95ffc2389

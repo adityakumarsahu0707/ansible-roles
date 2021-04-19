@@ -1,0 +1,6 @@
+---
+# vars file for myapache
+
+packages:
+        - httpd
+        - php

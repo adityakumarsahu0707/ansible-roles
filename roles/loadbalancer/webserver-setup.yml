@@ -1,0 +1,15 @@
+- hosts: localhost
+  vars_prompt:
+          name: "instance_name"
+          prompt: "Give sever name "
+          private: no
+  roles:
+          - myinstance
+            
+- hosts: proxyservers
+  roles:
+          - myapache
+
+- hosts: localhost
+  roles:
+          - myloadbalancer
